@@ -22,11 +22,9 @@
 #include <commands.h>
 
 // define things we need for the agent to run
-// #define HOST "10.31.10.10"
 #define HOST "localhost"
 #define PORT "1337"
-// #define HOST "10.31.20.20"
-// #define PORT "4443"
+
 #define SLEEP_INTERVAL 3
 
 #define SHUTDOWN_MSG "shutting down"
