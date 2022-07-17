@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# have cmake regenerate our make files, indicate the source CMakeLists.txt is 
+# in the current directory and that we want the resulting make files in a 
+# separate build folder.
+cmake -S . -B build/ -DRR_DEBUG_ALL=ON -DTEST=ON
+
+if [ $? -ne 0 ]
+then
+    echo "CMAKE COMMAND FAILED!"
+    exit 1
+fi
+
+# run the actual make command telling it where the make files are located.
+make -C build/
+
+if [ $? -ne 0 ]
+then
+    echo "MAKE COMMAND FAILED!"
+    exit 1
+fi
+
+# execute our test suite executable
+./test/bin/Test
+
+if [ $? -ne 0 ]
+then
+    echo "UNIT TESTS FAILED!"
+    exit 1
+fi
+
+./scripts/clean
+
+cmake -S . -B build/ -DRR_DEBUG_ALL=ON
+
+if [ $? -ne 0 ]
+then
+    echo "CMAKE COMMAND FAILED!"
+    exit 1
+fi
+
+# run the actual make command telling it where the make files are located.
+make -C build/
+
+if [ $? -ne 0 ]
+then
+    echo "MAKE COMMAND FAILED!"
+    exit 1
+fi
+
+if [ $? -eq 0 ]
+then
+    echo "RUNNING INTEGRATION TESTS"
+    valgrind --leak-check=full ./bin/RoadRunner &
+    ./integration/bin/Integration
+    pkill memcheck*
+fi

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# have cmake regenerate our make files, indicate the source CMakeLists.txt is in the current directory and that
+# we want the resulting make files in a separate build folder.
+cmake -S . -B build/ $@
+# run the actual make command telling it where the make files are located.
+make -C build/
